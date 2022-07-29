@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC Demo</title>
+</head>
+
+<body>
+    <p id="title"></p>
+</body>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    class Index {
+        constructor() {
+            this._title = document.getElementById("title");
+            this._baseUrl = "http://localhost:8081";
+            this._data = null;
+        }
+        get title() {
+            return this._title;
+        }
+        set title(val) {
+            this._title = val;
+        }
+        get data() {
+            return this._data;
+        }
+        set data(val) {
+            this._data = val;
+        }
+
+
+        getData = async () => {
+            try {
+                const res = await axios.get(this._baseUrl + "/");
+                return res;
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        processData = async () => {
+            await this.getData().then((res) => {
+                this.data = res.data;
+            });
+        }
+
+        render = () => {
+            this.processData().then(() => {
+                this.title.innerHTML = JSON.stringify(this.data);
+            });
+        }
+
+
+        init = () => {
+            this.render();
+        }
+    }
+
+    new Index().init();
+</script>
+
+</html>
